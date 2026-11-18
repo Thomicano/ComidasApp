@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+  --font-wide: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  --color-paper: #faf9f6;
+  --color-bone: #ebe7de;
+  --color-surface: #ffffff;
+  --color-well: #f1efea;
+  --color-line: #e8e5de;
+  --color-ink: #1c1b18;
+  --color-muted: #66635b;
+  /* bg-brand, text-brand, ring-brand… leen --theme-primary, que cada tienda inyecta. */
+  --color-brand: var(--theme-primary);
+  --color-on-brand: var(--theme-on-primary);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+:root {
+  /* Fuera de una tienda (el panel del Studio) el acento es la tinta. */
+  --theme-primary: #1c1b18;
+  --theme-on-primary: #ffffff;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  accent-color: var(--color-ink);
+}
+
+::selection {
+  background: color-mix(in oklab, var(--theme-primary) 22%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+@layer components {
+  /* Feedback táctil para cualquier elemento presionable. */
+  .press {
+    transition: transform 150ms var(--ease-out), background-color 150ms ease, border-color 150ms ease,
+      color 150ms ease, box-shadow 150ms ease;
+  }
+  .press:active {
+    transform: scale(0.97);
+  }
+
+  /* Grano fotográfico: ruido SVG multiplicado sobre todo lo que tiene debajo. */
+  .grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px;
+    mix-blend-mode: multiply;
+    opacity: 0.28;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .thin-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line) transparent;
+  }
+
+  .skeleton {
+    background: var(--color-well);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press:active {
+    transform: none;
+  }
+  .skeleton {
+    animation: none;
+  }
+}
